@@ -6,7 +6,7 @@ from PIL import Image
 # -----------------------------
 # Load your trained sugarcane model
 # -----------------------------
-model = load_model("sugarcane_balanced_model.h5")  # make sure this file is in the same folder
+model = load_model("sugarcane_mobilenet.h5")  # make sure this file is in the same folder
 
 # -----------------------------
 # Define sugarcane disease classes
@@ -60,3 +60,4 @@ if uploaded_file is not None:
     st.subheader("All Class Probabilities:")
     for i, class_name in enumerate(class_names):
         st.write(f"{class_name} : {predictions[0][i]*100:.2f} %")
+
