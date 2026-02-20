@@ -41,11 +41,12 @@ if uploaded_file is not None:
     confidence = float(np.max(predictions)) * 100
 
     # Decide sugarcane or not
-    if confidence < 80:  # threshold for sugarcane detection
+    if confidence < 70:  # threshold for sugarcane detection
         st.error("⚠ This does NOT look like a sugarcane leaf.")
     else:
         disease = class_names[predicted_class]
         st.success(f"Predicted Disease: {disease}")
         st.success(f"Confidence: {confidence:.2f}%")
         st.info(f"Recommended Treatment: {treatments[disease]}")
+
 
