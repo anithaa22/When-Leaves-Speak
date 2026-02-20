@@ -3,52 +3,60 @@ from tensorflow.keras.models import load_model
 import numpy as np
 from PIL import Image
 
-# Load the model
-model = load_model("sugarcane_mobilenet.h5")
+# -----------------------------
+# Load your trained sugarcane model
+# -----------------------------
+model = load_model("sugarcane_balanced_model.h5")  # make sure this file is in the same folder
 
-# Class names
-class_names = ['Healthy', 'Mosaic', 'Red Rot', 'Rust', 'Yellow Leaf']
+# -----------------------------
+# Define sugarcane disease classes
+# -----------------------------
+class_names = ['Healthy', 'Mosaic', 'RedRot', 'Rust', 'Yellow']
 
-# Disease treatments
-treatments = {
+# Define treatment/medicine recommendations for each disease
+treatment_dict = {
     'Healthy': "No treatment needed.",
-    'Mosaic': "Remove affected leaves, use resistant varieties.",
-    'Red Rot': "Use Carbendazim 50% WP - 1 gram per liter (500g per acre).",
-    'Rust': "Apply fungicides like Propiconazole 25% EC.",
-    'Yellow Leaf': "Spray Nitrogen fertilizer + remove infected canes."
+    'Mosaic': "Use virus-free planting material. Remove infected plants.",
+    'RedRot': "Use Carbendazim 50% WP - 1 gram per liter (500g per acre).",
+    'Rust': "Spray Propiconazole 25% EC - 1 ml per liter (400 ml per acre).",
+    'Yellow': "Spray Mancozeb 75% WP - 2 grams per liter."
 }
 
-st.title("When Leaves Speak")
+# -----------------------------
+# Confidence threshold
+# -----------------------------
+confidence_threshold = 0.4  # Adjust to capture all sugarcane leaves
 
-# Allow jpg, jpeg, png, webp
-uploaded_file = st.file_uploader(
-    "Upload a sugarcane leaf image", type=["jpg", "jpeg", "png", "webp"]
-)
+# -----------------------------
+# Streamlit UI
+# -----------------------------
+st.title("Sugarcane Leaf Disease Detection 🌱")
+st.write("Upload a sugarcane leaf image. The model will predict the disease and suggest treatment.")
+
+uploaded_file = st.file_uploader("Choose an image", type=["jpg", "jpeg", "png", "webp"])
 
 if uploaded_file is not None:
-    img = Image.open(uploaded_file)
-    st.image(img, caption="Uploaded Image", use_column_width=True)
+    # Open image
+    img = Image.open(uploaded_file).convert('RGB')
+    img = img.resize((224, 224))  # Resize to model input size
+    img_array = np.array(img) / 255.0  # Normalize
+    img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
 
-    # --- Preprocess the image ---
-    img = img.resize((224, 224))               # resize to model input size
-    img_array = np.array(img)                  # convert to array
-    img_array = img_array / 255.0              # normalize
-    img_array = np.expand_dims(img_array, 0)   # add batch dimension
-
-    # --- Make prediction ---
+    # Predict
     predictions = model.predict(img_array)
-    predicted_class = np.argmax(predictions)
-    confidence = float(np.max(predictions)) * 100
+    pred_class_index = np.argmax(predictions)
+    pred_confidence = predictions[0][pred_class_index]
 
-    # Decide sugarcane or not
-    if confidence < 70:  # threshold for sugarcane detection
-        st.error("⚠ This does NOT look like a sugarcane leaf.")
+    # Show results based on confidence
+    if pred_confidence < confidence_threshold:
+        st.warning("Disease not recognized clearly. Please consult an agricultural expert.")
     else:
-        disease = class_names[predicted_class]
-        st.success(f"Predicted Disease: {disease}")
-        st.success(f"Confidence: {confidence:.2f}%")
-        st.info(f"Recommended Treatment: {treatments[disease]}")
+        pred_class_name = class_names[pred_class_index]
+        st.success(f"Predicted Disease: {pred_class_name}")
+        st.info(f"Confidence: {pred_confidence*100:.2f}%")
+        st.write(f"Recommended Treatment: {treatment_dict[pred_class_name]}")
 
-
-
-
+    # Optional: Show probability for all classes
+    st.subheader("All Class Probabilities:")
+    for i, class_name in enumerate(class_names):
+        st.write(f"{class_name} : {predictions[0][i]*100:.2f} %")
