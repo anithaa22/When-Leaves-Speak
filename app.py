@@ -18,7 +18,7 @@ treatments = {
     'Yellow Leaf': "Spray Nitrogen fertilizer + remove infected canes."
 }
 
-st.title("Sugarcane Leaf Disease Detection")
+st.title("When Leaves Speak")
 
 # Allow jpg, jpeg, png, webp
 uploaded_file = st.file_uploader(
@@ -48,5 +48,6 @@ if uploaded_file is not None:
         st.success(f"Predicted Disease: {disease}")
         st.success(f"Confidence: {confidence:.2f}%")
         st.info(f"Recommended Treatment: {treatments[disease]}")
+
 
 
