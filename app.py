@@ -19,7 +19,7 @@ medicine_dict = {
 
 st.title("🌱 When Leaves Speak")
 
-uploaded_file = st.file_uploader("Upload a leaf image", type=["jpg", "jpeg", "png"])
+uploaded_file = st.file_uploader("Upload a leaf image", type=["jpg", "jpeg", "png","webp"])
 
 if uploaded_file is not None:
     img = Image.open(uploaded_file)
@@ -30,7 +30,7 @@ if uploaded_file is not None:
     img_array = np.expand_dims(img_array, axis=0)
     img_array = img_array / 255.0
 
-   predictions = model.predict(img_array)
+predictions = model.predict(img_array)
 predicted_class = np.argmax(predictions)
 confidence = float(np.max(predictions)) * 100
 
@@ -61,3 +61,4 @@ else:
     st.info(f"Recommended Treatment: {treatments[disease]}")
 
     
+
