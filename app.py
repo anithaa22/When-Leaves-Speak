@@ -30,16 +30,19 @@ if uploaded_file is not None:
     img_array = np.expand_dims(img_array, axis=0)
     img_array = img_array / 255.0
 
-    predictions = model.predict(img_array)
+   predictions = model.predict(img_array)
 
-    predicted_index = np.argmax(predictions[0])
-    predicted_class = class_names[predicted_index]
-    confidence = predictions[0][predicted_index]
+predicted_index = np.argmax(predictions[0])
+predicted_class = class_names[predicted_index]
+confidence = predictions[0][predicted_index]
 
-    st.subheader("Prediction Result")
-if confidence < 85:
+st.subheader("Prediction Result")
+
+if confidence < 0.85:
     st.error("⚠ This does not appear to be a sugarcane leaf.")
 else:
-    st.success(f"Disease: {class_names[predicted_class]}")
-    st.write(f"Confidence: {confidence:.2f}%")
+    st.success(f"Disease: {predicted_class}")
+    st.write(f"Confidence: {round(confidence*100,2)}%")
+    st.write(f"Recommended Treatment: {medicine_dict[predicted_class]}")
     
+
