@@ -30,7 +30,7 @@ confidence_threshold = 0.4  # Adjust to capture all sugarcane leaves
 # -----------------------------
 # Streamlit UI
 # -----------------------------
-st.title("Sugarcane Leaf Disease Detection 🌱")
+st.title("When Leaves Speak 🌱")
 st.write("Upload a sugarcane leaf image. The model will predict the disease and suggest treatment.")
 
 uploaded_file = st.file_uploader("Choose an image", type=["jpg", "jpeg", "png", "webp"])
@@ -60,4 +60,5 @@ if uploaded_file is not None:
     st.subheader("All Class Probabilities:")
     for i, class_name in enumerate(class_names):
         st.write(f"{class_name} : {predictions[0][i]*100:.2f} %")
+
 
