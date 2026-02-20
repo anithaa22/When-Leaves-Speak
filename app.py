@@ -50,4 +50,6 @@ if uploaded_file is not None:
     else:
         st.success(f"Prediction: {class_names[predicted_class]}")
         st.success(f"Confidence: {confidence:.2f}%")
+        st.info(f"Recommended Treatment {treatments[disease]}")
+
 
