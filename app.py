@@ -4,7 +4,7 @@ import numpy as np
 from PIL import Image
 
 # Load the model
-model = load_model("sugarcane_balanced_model.h5")
+model = load_model("sugarcane_mobilenet.h5")
 
 # Class names
 class_names = ['Healthy', 'Mosaic', 'Red Rot', 'Rust', 'Yellow Leaf']
@@ -48,3 +48,4 @@ if uploaded_file is not None:
         st.success(f"Predicted Disease: {disease}")
         st.success(f"Confidence: {confidence:.2f}%")
         st.info(f"Recommended Treatment: {treatments[disease]}")
+
