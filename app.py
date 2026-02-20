@@ -31,19 +31,23 @@ if uploaded_file is not None:
     img_array = img_array / 255.0
 
     predictions = model.predict(img_array)
+    predicted_class = np.argmax(predictions)
+    confidence = float(np.max(predictions)) * 100
 
-    predicted_index = np.argmax(predictions[0])
-    predicted_class = class_names[predicted_index]
-    confidence = predictions[0][predicted_index]
+    class_names = [
+        'Healthy',
+        'Mosaic',
+        'Red Rot',
+        'Rust',
+        'Yellow'
+    ]
 
-    st.subheader("Prediction Result")
+    st.write("Confidence:", round(confidence, 2), "%")
 
-    if confidence < 0.80:
-        st.error("⚠ This does not appear to be a sugarcane leaf.")
+    # 🔴 If confidence too low → Not sugarcane
+    if confidence < 70:
+        st.error("⚠ This is NOT a sugarcane leaf.")
     else:
-        st.success(f"Disease: {predicted_class}")
-        st.write(f"Confidence: {round(confidence*100,2)}%")
-        st.write(f"Recommended Treatment: {medicine_dict[predicted_class]}")
-    
-
+        st.success(f"Prediction: {class_names[predicted_class]}")
+        st.success(f"Confidence: {confidence:.2f}%")
 
