@@ -37,10 +37,9 @@ if uploaded_file is not None:
     confidence = predictions[0][predicted_index]
 
     st.subheader("Prediction Result")
-
-    if confidence < 0.5:
-        st.warning("Disease not recognized clearly. Please consult agricultural expert.")
-    else:
-        st.success(f"Disease: {predicted_class}")
-        st.write(f"Confidence: {round(confidence*100,2)}%")
-        st.write(f"Recommended Treatment: {medicine_dict[predicted_class]}")
+if confidence < 85:
+    st.error("⚠ This does not appear to be a sugarcane leaf.")
+else:
+    st.success(f"Disease: {class_names[predicted_class]}")
+    st.write(f"Confidence: {confidence:.2f}%")
+    
